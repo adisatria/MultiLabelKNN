@@ -31,30 +31,6 @@ def k_fold_validation():
 		print('training : ', training_this_round)
 		print('testing : ', testing_this_round)
 
-def main():
-	with open('TFxIDF2.csv') as tfidf:
-		data= csv.reader(tfidf, delimiter=',')
-
-		tampung = []
-		for row in data:
-			tampung.append(row)
-		# print(tampung[11])
-		# data=[1,2,3,4]
-		print(tampung[1])
-		blok1 = tampung[1:5]
-		tampung2=[]
-		for i in range(len(blok1)):
-			results = blok1[i][1:]
-			results = [float(j) for j in results]
-			Datatest = [float(k) for k in tampung[11][1:]]
-			distance = euclideanDistance(results, Datatest, 1963)
-
-			tampung2.append(distance)
-
-		tampung2.insert(0, tampung[11][0])
-		print(tampung2)
-		print(tampung[11][0])
-
 def main2():
 	with open('TFxIDF2.csv') as tfidf:
 		dataCSV = csv.reader(tfidf, delimiter=',')
@@ -66,7 +42,7 @@ def main2():
 				tampung.append(row[1:])
 
 		#k fold
-		num_folds = 4
+		num_folds = 3
 		subset_size = int(len(tampung) / num_folds)
 		for i in range(num_folds):
 			testing_this_round = tampung[i * subset_size:][:subset_size]
@@ -86,20 +62,39 @@ def main2():
 				currentData = []
 				for k in range(len(training_this_round)):
 					dataTraining = [float(y) for y in training_this_round[k]]
-					distance = euclideanDistance(dataTraining, dataTesting, 1963)
+					distance = euclideanDistance(dataTraining, dataTesting, 1963) #menghitung euclidean
 					currentData.append(distance)
 				finalData.append(currentData)
 			# tampung2.insert(0, tampung[10][0])
-			for i in range(len(finalData)):
-				print(finalData[i])
-				print('panjang tampung2 :', len(finalData[i]))
-				#------------------ KNN K -------------------#
-				finalDataNP = np.array(finalData[i])
+				print("____________________________________________________________")
+				print("nilai euclidean :", currentData)
+				print('panjang tampung2 :', len(currentData))
+				# ------------------ KNN K -------------------#
+				finalDataNP = np.array(currentData) #memasukkan list ke dalama array numpy
 				k = 3
-				idx = np.argpartition(finalDataNP, k)
-				hasil = finalDataNP[idx[:k]]
-				print("hasil k :",hasil)
-			# print(tampung[10][0])
+				idx = np.argpartition(finalDataNP, k) #mengurutkan dari yg terkecil sejumlah k
+				hasil = finalDataNP[idx[:k]] #mengurutkan dari yg terkecil sejumlah k
+				print("hasil k :", hasil)
+				# print('\n')
+
+				for j in [j for j, x in enumerate(currentData) if x in hasil]:
+					print(j)
+
+		# for i in range(len(finalData)):
+			# 	print("____________________________________________________________")
+			# 	print("nilai euclidean ",i,":",finalData[i])
+			# 	print('panjang tampung2 :', len(finalData[i]))
+			# 	#------------------ KNN K -------------------#
+			# 	finalDataNP = np.array(finalData[i])
+			# 	k = 3
+			# 	idx = np.argpartition(finalDataNP, k)
+			# 	hasil = finalDataNP[idx[:k]]
+			# 	print("hasil k :",hasil)
+			# 	# print('\n')
+            #
+			# 	for j in [j for j, x in enumerate(finalData[i]) if x in hasil]:
+			# 		print(j)
+			# # print(tampung[10][0])
 
 
 main2()
