@@ -90,14 +90,25 @@ def main2():
 				for o in range(len(noUrut)):
 					print(noUrut[o])
 					# print(simpanLabel[noUrut[o]])
-					label = simpanLabel[noUrut[o]]
+					label = []
+					kelas = []
+					for m in range(len(simpanLabel[noUrut[o]])):
+						# print(simpanLabel[noUrut[o]][m])
+						noLabel, noKelas = simpanLabel[noUrut[o]][m].split(" ")
+						label.append(noLabel)
+						kelas.append(noKelas)
+					print("label :", label)
+					print("kelas :", kelas)
+
 					label2 = [int(x) for x in label]
 					biner = []
+					indexKelas = 0
 					for p in range(7):
 						if p == 0:
 							continue
 						elif p in label2:
-							biner.append(1)
+							biner.append(int(kelas[indexKelas]))
+							indexKelas += 1
 						else:
 							biner.append(0)
 					# print(biner)
