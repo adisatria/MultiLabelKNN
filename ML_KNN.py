@@ -1,22 +1,13 @@
 import math
-import ast
 import numpy as np
-import sys, argparse, csv
-
-#
-# def column(matrix, i):
-#     return [row[i] for row in matrix]
+import csv
 
 def euclideanDistance(instance1, instance2, length):
 	distance = 0
 	for x in range(length):
 		distance += pow((instance1[x] - instance2[x]), 2)
 	return math.sqrt(distance)
-#
-# data1 = ['0','1']
-# data2 = ['2','3']
-# distance = euclideanDistance(data1, data2, 2)
-# print ('Distance: ' + repr(distance))
+
 def k_fold_validation():
 	training = [[2.11, 2, 3, 4], [5, 6, 7, 8], [9, 10, 11, 12], [9, 3, 6, 2], [3, 6, 3, 8], [3, 8, 8, 9],
 				[12, 24, 6, 12], [22, 25, 63, 11]]
@@ -31,39 +22,21 @@ def k_fold_validation():
 		print('training : ', training_this_round)
 		print('testing : ', testing_this_round)
 
-def main():
-	with open('TFxIDF2.csv') as tfidf:
-		data= csv.reader(tfidf, delimiter=',')
-
-		tampung = []
-		for row in data:
-			tampung.append(row)
-		# print(tampung[11])
-		# data=[1,2,3,4]
-		print(tampung[1])
-		blok1 = tampung[1:5]
-		tampung2=[]
-		for i in range(len(blok1)):
-			results = blok1[i][1:]
-			results = [float(j) for j in results]
-			Datatest = [float(k) for k in tampung[11][1:]]
-			distance = euclideanDistance(results, Datatest, 1963)
-
-			tampung2.append(distance)
-
-		tampung2.insert(0, tampung[11][0])
-		print(tampung2)
-		print(tampung[11][0])
-
 def main2():
-	with open('TFxIDF2.csv') as tfidf:
+	with open('TFxIDF2.csv') as tfidf, open('kelas.csv') as bukacsv:
 		dataCSV = csv.reader(tfidf, delimiter=',')
+		DataLabel = csv.reader(bukacsv, delimiter=',')
 		tampung = []
 		for row in dataCSV:
 			if row[0] == ' ':
 				continue
 			else:
 				tampung.append(row[1:])
+
+		#data berisi label
+		simpanLabel = []
+		for row in DataLabel:
+			simpanLabel.append(row)
 
 		#k fold
 		num_folds = 6
@@ -106,23 +79,41 @@ def main2():
 					print(j," :",training_this_round[j])
 					tempUrutan.append(training_this_round[j])
 
+				noUrut = []
 				for j in [j for j, x in enumerate(tampung) if x in tempUrutan]:
-					print(j)
-		# for i in range(len(finalData)):
-			# 	print("____________________________________________________________")
-			# 	print("nilai euclidean ",i,":",finalData[i])
-			# 	print('panjang tampung2 :', len(finalData[i]))
-			# 	#------------------ KNN K -------------------#
-			# 	finalDataNP = np.array(finalData[i])
-			# 	k = 3
-			# 	idx = np.argpartition(finalDataNP, k)
-			# 	hasil = finalDataNP[idx[:k]]
-			# 	print("hasil k :",hasil)
-			# 	# print('\n')
-            #
-			# 	for j in [j for j, x in enumerate(finalData[i]) if x in hasil]:
-			# 		print(j)
-			# # print(tampung[10][0])
+					# noUrut.insert(0,j)
+					noUrut.append(j)
+				print("no urut ",noUrut)
+
+				#mencari label untuk data testing
+				totalBiner = []
+				for o in range(len(noUrut)):
+					print(noUrut[o])
+					# print(simpanLabel[noUrut[o]])
+					label = simpanLabel[noUrut[o]]
+					label2 = [int(x) for x in label]
+					biner = []
+					for p in range(7):
+						if p == 0:
+							continue
+						elif p in label2:
+							biner.append(1)
+						else:
+							biner.append(0)
+					# print(biner)
+					totalBiner.append(biner)
+				print(totalBiner)
+
+				labelClass = [1, 2, 4]
+				for k in range(len(labelClass)):
+					for o in range(len(totalBiner[0])):
+						tambah = 0
+						for p in range(len(totalBiner)):
+							# print(data[j][i])
+							if totalBiner[p][o] == labelClass[k]:
+								tambah += 1
+						if tambah >= 3:
+							print(o, "yuhu")
 
 
 main2()
