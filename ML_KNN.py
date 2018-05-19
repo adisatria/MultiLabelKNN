@@ -71,24 +71,30 @@ def main2():
 				k = 5
 				idx = np.argpartition(finalDataNP, k) #mengurutkan dari yg terkecil sejumlah k
 				hasil = finalDataNP[idx[:k]] #mengurutkan dari yg terkecil sejumlah k
-				print("hasil k :", hasil)
+				# print("hasil k :", hasil)
 				# print('\n')
 
+				#mengambil id dari nilai euclidean yg diurutkan berdasarkan k
 				tempUrutan = []
 				for j in [j for j, x in enumerate(nilaiEuclid) if x in hasil]:
 					print(j," :",training_this_round[j])
 					tempUrutan.append(training_this_round[j])
 
+				#untuk mengetahui id data training terhadap total data
 				noUrut = []
 				for j in [j for j, x in enumerate(tampung) if x in tempUrutan]:
-					# noUrut.insert(0,j)
 					noUrut.append(j)
-				print("no urut ",noUrut)
+				# print("no urut ",noUrut)
 
+				#mendapatkan ID untuk data testing
+				IDtesting = []
+				for j in [j for j, x in enumerate(tampung) if x in testing_this_round]:
+					IDtesting.append(j)
+				print("ID testing :", IDtesting)
 				#mencari label untuk data testing
 				totalBiner = []
 				for o in range(len(noUrut)):
-					print(noUrut[o])
+					# print(noUrut[o])
 					# print(simpanLabel[noUrut[o]])
 					label = []
 					kelas = []
@@ -97,8 +103,8 @@ def main2():
 						noLabel, noKelas = simpanLabel[noUrut[o]][m].split(" ")
 						label.append(noLabel)
 						kelas.append(noKelas)
-					print("label :", label)
-					print("kelas :", kelas)
+					# print("label :", label)
+					# print("kelas :", kelas)
 
 					label2 = [int(x) for x in label]
 					biner = []
@@ -113,9 +119,9 @@ def main2():
 							biner.append(0)
 					# print(biner)
 					totalBiner.append(biner)
-				print(totalBiner)
+				# print(totalBiner)
 
-				labelClass = [1, 2, 4]
+				labelClass = [1, 2]
 				for k in range(len(labelClass)):
 					for o in range(len(totalBiner[0])):
 						tambah = 0
@@ -124,7 +130,10 @@ def main2():
 							if totalBiner[p][o] == labelClass[k]:
 								tambah += 1
 						if tambah >= 3:
-							print(o, "yuhu")
+							if labelClass[k] == 1:
+								print("Label ",o+1,": Kelas Positif(+)")
+							elif labelClass[k] == 2:
+								print("Label ",o+1,": Kelas Negatif(-)")
 
 
 main2()
